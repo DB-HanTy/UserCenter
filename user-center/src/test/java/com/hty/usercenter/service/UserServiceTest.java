@@ -25,10 +25,10 @@ public class UserServiceTest {
     public void testAddUser(){
         User user = new User();
         user.setUsername("hty");
-        user.setUserAccount("123");
+        user.setUserAccount("1234");
         user.setAvatarUrl("");
         user.setGender(0);
-        user.setUserPassword("xxx");
+        user.setUserPassword("12345678");
         user.setPhone("123");
         user.setEmail("456");
         boolean result = userService.save(user);
