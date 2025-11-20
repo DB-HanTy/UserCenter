@@ -38,9 +38,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return -1;
         }
         //账户不能包含特殊字符
-        String validPattern = "\\pP|\\pS|\\s+";
+        String validPattern = "[\\\\u00A0\\\\s\\\"`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.find()){
+        if (matcher.find()){
             return -1;
         }
         //密码和校验密码相同
