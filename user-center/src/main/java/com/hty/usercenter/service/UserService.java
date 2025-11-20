@@ -3,6 +3,8 @@ package com.hty.usercenter.service;
 import com.hty.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author hty
  * @description 针对表【user(用户)】的数据库操作Service
@@ -21,10 +23,12 @@ public interface UserService extends IService<User> {
 
     /**
      * 登录
+     *
      * @param userAccount  用户账户
      * @param userPassword 用户密码
+     * @param request
      * @return 脱敏后的用户信息
      */
-    User doLogin(String userAccount, String userPassword);
+    User doLogin(String userAccount, String userPassword, HttpServletRequest request);
 
 }

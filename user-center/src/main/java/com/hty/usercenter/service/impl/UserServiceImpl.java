@@ -1,4 +1,5 @@
 package com.hty.usercenter.service.impl;
+import java.util.Date;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,10 +34,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     private static final String SALT = "hty";
 
+    /**
+     * 登录态键
+     */
+    private static final String USER_LOGIN_STATE = "userLoginState";
+
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         //1、校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)){
+            //todo 修改为自定义异常
             return -1;
         }
         if (userAccount.length() < 4){
@@ -78,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User doLogin(String userAccount, String userPassword) {
+    public User doLogin(String userAccount, String userPassword, HttpServletRequest request) {
         //1、校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)){
             return null;
@@ -109,7 +117,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return null;
         }
 
-        return user;
+
+        //3、用户脱敏
+        User safetyUser = new User();
+        safetyUser.setId(user.getId());
+        safetyUser.setUsername(user.getUsername());
+        safetyUser.setUserAccount(user.getUserAccount());
+        safetyUser.setAvatarUrl(user.getAvatarUrl());
+        safetyUser.setGender(user.getGender());
+        safetyUser.setPhone(user.getPhone());
+        safetyUser.setEmail(user.getEmail());
+        safetyUser.setUserStatus(user.getUserStatus());
+        safetyUser.setCreateTime(user.getCreateTime());
+
+        //4、记录用户登录态
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        return safetyUser;
     }
 }
 
