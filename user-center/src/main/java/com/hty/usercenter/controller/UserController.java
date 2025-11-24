@@ -6,15 +6,13 @@ import com.hty.usercenter.model.domain.request.UserLoginRequest;
 import com.hty.usercenter.model.domain.request.UserRegisterRequest;
 import com.hty.usercenter.service.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.hty.usercenter.constant.UserConstant.ADMIN_ROLE;
 import static com.hty.usercenter.constant.UserConstant.USER_LOGIN_STATE;
@@ -54,7 +52,7 @@ public class UserController {
        return userService.userLogin(userAccount, userPassword,request);
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public List<User> searchUsers(String username,HttpServletRequest  request){
         if (!isAdmin(request)){
             return new ArrayList<>();
@@ -63,7 +61,8 @@ public class UserController {
         if (StringUtils.isNotBlank(username)){
             queryWrapper.like("username",username);
         }
-        return userService.list(queryWrapper);
+        List<User> userList = userService.list(queryWrapper);
+        return userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
     }
 
     @PostMapping("/delete")
@@ -75,6 +74,7 @@ public class UserController {
         }
         return userService.removeById(id);
     }
+
     /**
      * 是否为管理员
      * @param request
@@ -83,8 +83,6 @@ public class UserController {
     private boolean isAdmin(HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User user = (User) userObj;
-        return user != null || user.getUserRole() == ADMIN_ROLE;
+        return user != null && user.getUserRole() == ADMIN_ROLE;
     }
-
-
 }

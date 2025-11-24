@@ -10,16 +10,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.hty.usercenter.model.domain.User.User
 */
 public interface UserMapper extends BaseMapper<User> {
-
     /**
     * @author 33038
     * @description 针对表【user(用户)】的数据库操作Mapper
     * @createDate 2025-11-24 09:12:02
     * @Entity com.hty.usercenter.model.domain.User.User
     */
-    interface UserMapper extends BaseMapper<User.User> {
-
-    }
 }
 
 
