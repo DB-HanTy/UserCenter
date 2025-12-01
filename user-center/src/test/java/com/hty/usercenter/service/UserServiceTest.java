@@ -41,34 +41,35 @@ public class UserServiceTest {
         String userAccount = "hanty";
         String userPassword = "";
         String checkPassword = "123456";
-        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        String userCode = "1";
+        long result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         userAccount = "ht";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         userAccount = "hanty";
         userPassword = "123456";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         userAccount = "h t y i";
         userPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         checkPassword = "123456789";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         userAccount = "dhanty";
         checkPassword = "12345678";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
         userAccount = "hanty";
-        result = userService.userRegister(userAccount, userPassword, checkPassword);
+        result = userService.userRegister(userAccount, userPassword, checkPassword,userCode);
         Assertions.assertEquals(-1, result);
 
     }
