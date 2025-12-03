@@ -1,6 +1,8 @@
 package com.hty.usercenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hty.usercenter.common.BaseResponse;
+import com.hty.usercenter.common.ResultUtils;
 import com.hty.usercenter.model.domain.User;
 import com.hty.usercenter.model.domain.request.UserLoginRequest;
 import com.hty.usercenter.model.domain.request.UserRegisterRequest;
@@ -25,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public Long userRegister(@RequestBody UserRegisterRequest userRegisterRequest){
+    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest){
         if (userRegisterRequest == null){
             return null;
         }
@@ -36,12 +38,12 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userCode)){
             return null;
         }
-        long id = userService.userRegister(userAccount, userPassword, checkPassword, userCode);
-        return id;
+        long result = userService.userRegister(userAccount, userPassword, checkPassword, userCode);
+        return ResultUtils.success(result);
     }
 
     @PostMapping("/login")
-    public User userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request){
+    public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request){
         if (userLoginRequest == null){
             return null;
         }
@@ -50,19 +52,21 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)){
             return null;
         }
-       return userService.userLogin(userAccount, userPassword,request);
+        User user = userService.userLogin(userAccount, userPassword,request);
+        return ResultUtils.success(user);
     }
 
     @PostMapping("/logout")
-    public Integer userLogout(HttpServletRequest request){
+    public BaseResponse<Integer> userLogout(HttpServletRequest request){
         if (request == null){
             return null;
         }
-        return userService.userLogout(request);
+        int result = userService.userLogout(request);
+        return ResultUtils.success(result);
     }
 
     @GetMapping("/current")
-    public User getCurrentUser(HttpServletRequest  request){
+    public BaseResponse<User> getCurrentUser(HttpServletRequest  request){
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null){
@@ -71,11 +75,12 @@ public class UserController {
         long userId = currentUser.getId();
         //TODO 校验用户是否合法
         User user = userService.getById(userId);
-        return userService.getSafetyUser(user);
+        User safetyUser = userService.getSafetyUser(user);
+        return ResultUtils.success(safetyUser);
     }
 
     @GetMapping("/search")
-    public List<User> searchUsers(String username,HttpServletRequest  request){
+    public BaseResponse<List<User>> searchUsers(String username,HttpServletRequest  request){
         if (!isAdmin(request)){
             return new ArrayList<>();
         }
@@ -84,17 +89,19 @@ public class UserController {
             queryWrapper.like("username",username);
         }
         List<User> userList = userService.list(queryWrapper);
-        return userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        List<User> result = userList.stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        return ResultUtils.success(result);
     }
 
     @PostMapping("/delete")
-    public boolean deleteUsers(@RequestBody long id,HttpServletRequest  request){
+    public BaseResponse<Boolean> deleteUsers(@RequestBody long id,HttpServletRequest  request){
         //仅管理员查询
-        if (isAdmin(request)) return false;
+        if (isAdmin(request)) return null;
         if (id <= 0){
-            return false;
+            return null;
         }
-        return userService.removeById(id);
+        boolean result = userService.removeById(id);
+        return ResultUtils.success(result);
     }
 
     /**
