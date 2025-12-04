@@ -9,7 +9,13 @@ import com.hty.usercenter.common.ErrorCode;
  */
 public class BusinessException extends RuntimeException{
 
+    /**
+     * 异常码
+     */
     private final int code;
+    /**
+     * 描述
+     */
     private final String description;
 
     public BusinessException(String message, int code, String description) {

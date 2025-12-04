@@ -41,16 +41,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public long userRegister(String userAccount, String userPassword, String checkPassword, String userCode) {
         //1、校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userCode)){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
         if (userAccount.length() < 4){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户账号过短");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
         }
         if (userPassword.length() < 8 || checkPassword.length() < 8){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户密码过短");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
         }
         if (userCode.length() > 5){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户编号过长");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户编号过长");
         }
         //账户不能包含特殊字符
         String validPattern = ".*[[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\\n|\\r|\\t].*";
@@ -67,14 +67,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.eq("userAccount",userAccount);
         long count = userMapper.selectCount(queryWrapper);
         if (count > 0){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
         }
         //用户编号不能重复
         queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userCode",userCode);
         count = userMapper.selectCount(queryWrapper);
         if (count > 0){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "编号重复");
         }
 
         //2、加密
