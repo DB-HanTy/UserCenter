@@ -2,6 +2,8 @@ package com.hty.usercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hty.usercenter.common.ErrorCode;
+import com.hty.usercenter.exception.BusinessException;
 import com.hty.usercenter.model.domain.User;
 import com.hty.usercenter.service.UserService;
 import com.hty.usercenter.mapper.UserMapper;
@@ -39,17 +41,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public long userRegister(String userAccount, String userPassword, String checkPassword, String userCode) {
         //1、校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, userCode)){
-            //todo 修改为自定义异常
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数为空");
         }
         if (userAccount.length() < 4){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户账号过短");
         }
         if (userPassword.length() < 8 || checkPassword.length() < 8){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户密码过短");
         }
         if (userCode.length() > 5){
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户编号过长");
         }
         //账户不能包含特殊字符
         String validPattern = ".*[[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\\n|\\r|\\t].*";

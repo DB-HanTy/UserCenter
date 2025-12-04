@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hty.usercenter.common.BaseResponse;
 import com.hty.usercenter.common.ErrorCode;
 import com.hty.usercenter.common.ResultUtils;
+import com.hty.usercenter.exception.BusinessException;
 import com.hty.usercenter.model.domain.User;
 import com.hty.usercenter.model.domain.request.UserLoginRequest;
 import com.hty.usercenter.model.domain.request.UserRegisterRequest;
@@ -30,7 +31,8 @@ public class UserController {
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest){
         if (userRegisterRequest == null){
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+//            return ResultUtils.error(ErrorCode.PARAMS_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
@@ -83,7 +85,7 @@ public class UserController {
     @GetMapping("/search")
     public BaseResponse<List<User>> searchUsers(String username,HttpServletRequest  request){
         if (!isAdmin(request)){
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(username)){

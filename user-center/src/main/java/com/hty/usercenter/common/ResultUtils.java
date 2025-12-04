@@ -17,10 +17,38 @@ public class ResultUtils {
     /**
      * 失败
      * @param errorCode
-     * @param <T>
+     * @param
      * @return
      */
-    public static <T> BaseResponse<T> error(ErrorCode errorCode){
+    public static BaseResponse error(ErrorCode errorCode){
         return new BaseResponse<>(errorCode);
     }
+    /**
+     * 失败
+     * @param code
+     * @param
+     * @return
+     */
+    public static BaseResponse error(int code, String message, String description){
+        return new BaseResponse<>(code,null,message,description);
+    }
+    /**
+     * 失败
+     * @param errorCode
+     * @param
+     * @return
+     */
+    public static BaseResponse error(ErrorCode errorCode, String message, String description){
+        return new BaseResponse<>(errorCode.getCode(),null,message,description);
+    }
+    /**
+     * 失败
+     * @param errorCode
+     * @param
+     * @return
+     */
+    public static BaseResponse error(ErrorCode errorCode, String description){
+        return new BaseResponse<>(errorCode.getCode(),errorCode.getMessage(),description);
+    }
+
 }
