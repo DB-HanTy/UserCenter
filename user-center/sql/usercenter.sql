@@ -19,3 +19,4 @@ create table user
 )
     comment '用户';
 
+insert into user (username, userAccount, userPassword, avatarUrl, gender, phone, email, userRole) values ('admin', 'admin', '123456', '', 0, '12345678901', '12345678901@163.com', 1);
