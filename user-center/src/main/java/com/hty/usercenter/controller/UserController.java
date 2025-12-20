@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static com.hty.usercenter.constant.UserConstant.ADMIN_ROLE;
 import static com.hty.usercenter.constant.UserConstant.USER_LOGIN_STATE;
 
-@RestController
+@RestController//@RestController适用于restful风格的api，返回值默认为json类型
 @RequestMapping("/user")
 public class UserController {
 
